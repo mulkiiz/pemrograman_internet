@@ -1,0 +1,79 @@
+{
+  "info": {
+    "name": "Praktikum CPMK-5 - API Sensor JWT",
+    "description": "Contoh request berurutan untuk login, membaca data, dan membuat pengukuran.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "sensor_id", "value": "1" },
+    { "key": "measurement_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1 - Login operator",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Login berhasil', function () { pm.response.to.have.status(200); });",
+              "pm.environment.set('token', pm.response.json().access_token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "username", "value": "operator", "type": "text" },
+            { "key": "password", "value": "OperatorLab!2026", "type": "text" }
+          ]
+        },
+        "url": { "raw": "{{base_url}}/auth/token", "host": ["{{base_url}}"], "path": ["auth", "token"] }
+      }
+    },
+    {
+      "name": "2 - Profil pengguna",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/auth/me", "host": ["{{base_url}}"], "path": ["auth", "me"] }
+      }
+    },
+    {
+      "name": "3 - Daftar sensor",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/sensors/", "host": ["{{base_url}}"], "path": ["sensors", ""] }
+      }
+    },
+    {
+      "name": "4 - Tambah pengukuran",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sensor_id\": {{sensor_id}},\n  \"value\": 221.4,\n  \"unit\": \"V\",\n  \"measured_at\": \"2026-10-21T10:00:00\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{base_url}}/measurements/", "host": ["{{base_url}}"], "path": ["measurements", ""] }
+      }
+    },
+    {
+      "name": "5 - Daftar pengukuran",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/measurements/", "host": ["{{base_url}}"], "path": ["measurements", ""] }
+      }
+    }
+  ]
+}
