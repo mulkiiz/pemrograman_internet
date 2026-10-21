@@ -11,6 +11,8 @@ router = APIRouter(prefix="/sensors", tags=["Sensors"])
 
 @router.post("/", response_model=SensorRead, status_code=201)
 def create_sensor(data: SensorCreate, session: Session = Depends(get_session)):
+    if crud.get_sensor_by_code(session, data.code):
+        raise HTTPException(status_code=409, detail="Kode sensor sudah digunakan")
     return crud.create_sensor(session, data)
 
 
@@ -46,6 +48,9 @@ def update_sensor(
     sensor = crud.get_sensor(session, sensor_id)
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor tidak ditemukan")
+    other_sensor = crud.get_sensor_by_code(session, data.code)
+    if other_sensor is not None and other_sensor.id != sensor_id:
+        raise HTTPException(status_code=409, detail="Kode sensor sudah digunakan")
     return crud.update_sensor(session, sensor, data)
 
 

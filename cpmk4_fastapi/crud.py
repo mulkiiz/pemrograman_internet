@@ -21,6 +21,11 @@ def get_sensor(session: Session, sensor_id: int) -> Sensor | None:
     return session.get(Sensor, sensor_id)
 
 
+def get_sensor_by_code(session: Session, code: str) -> Sensor | None:
+    statement = select(Sensor).where(Sensor.code == code)
+    return session.exec(statement).first()
+
+
 def update_sensor(
     session: Session, sensor: Sensor, data: SensorUpdate
 ) -> Sensor:

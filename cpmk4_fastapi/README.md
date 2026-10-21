@@ -18,8 +18,9 @@ cpmk4_fastapi/
 |   |-- __init__.py
 |   |-- sensors.py          # Endpoint sensor dan pengukuran per sensor
 |   `-- measurements.py     # Endpoint CRUD pengukuran
-`-- lab_sensor.db           # Dibuat otomatis saat aplikasi dijalankan
 ```
+
+Database bersama `../lab_sensor.db` berada di folder utama `pemrogramaninternet`.
 
 ## Menjalankan di Windows
 
@@ -28,10 +29,10 @@ Buka PowerShell di folder proyek, lalu jalankan:
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m uvicorn main:app --reload
+.\.venv\Scripts\python.exe -m uvicorn main:app --reload --port 8001
 ```
 
-Buka `http://127.0.0.1:8000/docs` untuk mencoba endpoint. Server API berjalan dengan Uvicorn; folder `htdocs` XAMPP dipakai sebagai lokasi file proyek, bukan untuk menjalankan FastAPI melalui Apache/PHP.
+Buka `http://127.0.0.1:8001/docs` untuk mencoba endpoint. Port 8001 memungkinkan CPMK-4 berjalan bersamaan dengan CPMK-5 di port 8000. Jalankan perintah dari folder `cpmk4_fastapi` agar aplikasi menemukan database bersama `../lab_sensor.db`. Server API berjalan dengan Uvicorn; folder `htdocs` XAMPP dipakai sebagai lokasi file proyek, bukan untuk menjalankan FastAPI melalui Apache/PHP.
 
 ## Endpoint utama
 
@@ -72,4 +73,6 @@ Pengukuran (gunakan `sensor_id` dari response pembuatan sensor):
 }
 ```
 
-Data tersimpan pada `lab_sensor.db` di folder kerja saat Uvicorn dijalankan. Pengukuran dihapus terlebih dahulu sebelum sensor yang memilikinya dapat dihapus.
+Data tersimpan pada `lab_sensor.db` di folder utama `pemrogramaninternet` dan dibaca bersama oleh CPMK-4 dan CPMK-5. Kode sensor harus unik. Pengukuran dihapus terlebih dahulu sebelum sensor yang memilikinya dapat dihapus.
+
+**Catatan keamanan:** CPMK-4 tidak memakai autentikasi. Karena database dibagi dengan CPMK-5, operasi CRUD melalui API CPMK-4 tidak melewati pemeriksaan role CPMK-5. Gunakan hanya di komputer praktikum lokal; matikan server CPMK-4 ketika sedang menunjukkan kontrol akses CPMK-5.

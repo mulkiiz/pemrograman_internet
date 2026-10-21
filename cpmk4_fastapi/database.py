@@ -1,7 +1,9 @@
 from sqlmodel import Session, SQLModel, create_engine
 
 
-DATABASE_URL = "sqlite:///lab_sensor.db"
+# Jalankan Uvicorn dari folder cpmk4_fastapi. Database bersama berada satu
+# tingkat di atas folder ini, di root pemrogramaninternet.
+DATABASE_URL = "sqlite:///../lab_sensor.db"
 engine = create_engine(
     DATABASE_URL,
     connect_args={"check_same_thread": False},

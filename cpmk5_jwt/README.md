@@ -27,7 +27,7 @@ cpmk5_jwt/
 `-- Modul_Praktikum_CPMK5_Python_JWT.pdf
 ```
 
-File `lab_sensor_secure.db` dibuat otomatis saat aplikasi pertama kali dijalankan. File `.env` dan database lokal tidak untuk diunggah ke repository.
+File `lab_sensor.db` berada di folder utama `pemrogramaninternet` dan dipakai bersama oleh CPMK-4 dan CPMK-5. Tabel pengguna khusus CPMK-5 tetap berada di file yang sama. File `.env` dan database lokal tidak untuk diunggah ke repository.
 
 ## Kebutuhan
 
@@ -65,7 +65,7 @@ Buka `.env` dengan editor teks dan ganti nilai `SECRET_KEY` menggunakan hasil pe
 ```text
 SECRET_KEY=isi_dengan_hasil_secret_acak
 ACCESS_TOKEN_EXPIRE_MINUTES=30
-DATABASE_URL=sqlite:///./lab_sensor_secure.db
+DATABASE_URL=sqlite:///../lab_sensor.db
 ```
 
 Jalankan server dari folder proyek:
@@ -180,7 +180,11 @@ JWT pada contoh ini ditandatangani, bukan dienkripsi. Jangan memasukkan password
 - **`403 Forbidden`**: login berhasil, tetapi role tidak memiliki hak endpoint itu. Coba akun dengan peran yang sesuai.
 - **`422 Unprocessable Entity`**: periksa field JSON, tipe angka, format waktu ISO, dan `sensor_id`.
 - **Data tidak muncul**: periksa `sensor_id` pada body dan gunakan `GET /measurements/` untuk melihat semua pengukuran.
-- **File database berbeda**: jalankan Uvicorn dari folder proyek yang sama agar SQLite menggunakan `lab_sensor_secure.db` yang dimaksud.
+- **Data tidak sama**: pastikan kedua aplikasi dijalankan dari folder proyek masing-masing. CPMK-4 menggunakan `../lab_sensor.db`, sedangkan CPMK-5 membaca nilai `DATABASE_URL` pada `.env` (default `sqlite:///../lab_sensor.db`).
+
+## Catatan penggunaan database bersama
+
+Sensor dan pengukuran dapat dibuat atau diubah melalui kedua API, sehingga perubahan dari satu CPMK terlihat pada CPMK lainnya. CPMK-4 memang tidak memakai autentikasi; ketika server CPMK-4 aktif, endpoint CRUD-nya dapat melewati pembatasan role yang dipelajari pada CPMK-5. Untuk praktikum lokal, matikan server CPMK-4 saat menguji keamanan CPMK-5 dan jangan membuka server CPMK-4 ke jaringan.
 
 ## Batas praktikum
 

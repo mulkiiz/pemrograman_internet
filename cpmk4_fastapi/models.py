@@ -5,7 +5,7 @@ class Sensor(SQLModel, table=True):
     __tablename__ = "sensor"
 
     id: int | None = Field(default=None, primary_key=True)
-    code: str = Field(index=True)
+    code: str = Field(index=True, unique=True)
     location: str
     parameter: str
     measurements: list["Measurement"] = Relationship(back_populates="sensor")

@@ -15,4 +15,4 @@ if not SECRET_KEY or SECRET_KEY.startswith("GANTI_"):
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./lab_sensor_secure.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///../lab_sensor.db")
